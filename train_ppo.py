@@ -3,6 +3,8 @@ import logging
 import random
 import numpy as np
 import networkx as nx
+import argparse
+
 from time import time
 from tqdm import tqdm
 
@@ -20,7 +22,21 @@ from data.util import write_nx_to_metis
 
 from env import MaximumIndependentSetEnv
 
-device = torch.device(0)
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    "--data-dir", 
+    help="directory to store validation and test datasets",
+    type=str
+    )
+parser.add_argument(
+    "--device",
+    help="id of gpu device to use",
+    type=int
+    )
+args = parser.parse_args()
+
+device = torch.device(args.device)
+base_data_dir = os.path.join(args.data_dir, "er_15_20")
 
 # env
 hamming_reward_coef = 0.1
@@ -70,7 +86,6 @@ eval_num_samples = 10
 best_vali_sol = -1e5
 
 # generate and save datasets
-base_data_dir = "/data/er_15_20/"
 num_eval_graphs = 1000
 
 for mode in ["vali", "test"]:
